@@ -8,11 +8,11 @@ module.exports = app => {
     // Retrieve all published Client
     router.get("/status", Estudiante.findAllStatus);
     // Retrieve a single Client with id
-    router.get("/:id", Estudiante.findOne);
+    router.get("/:id_estudiante", Estudiante.findOne);
     // Update a Client with id
-    router.put("/update/:id", Estudiante.update);
+    router.put("/update/:id_estudiante", Estudiante.update);
     // Delete a Client with id
-    router.delete("/delete/:id", Estudiante.delete);
+    router.delete("/delete/:id_estudiante", Estudiante.delete);
     // Delete all Cliente
     router.delete("/delete/", Estudiante.deleteAll);
     // Podemos utilizar como una ocpion app.use("EndPoint",router" para simplicar el URI
