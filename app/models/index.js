@@ -1,46 +1,42 @@
-// Cargamos el archivo de configuración que contiene los datos de conexión a la base de datos
+// usamos la función requiere para cargar el modulo db.config.js para traer los parametros preconfigurados de la BD
 const dbConfig = require("../config/db.config.js");
-
-// Importamos Sequelize, el ORM que nos permite trabajar con PostgreSQL como objetos JS
+// cargamos el modulo sequelize "ORM" para el manejo de las entidades como objetos. 
 const Sequelize = require("sequelize");
+// creamos una variable sequelize y la inicializamos como un Objeto Sequelize con la informacion de la BD 
 
-// Creamos una instancia de Sequelize con los parámetros de conexión, incluyendo SSL para NeonDB
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-  host: dbConfig.HOST,            // Dirección del servidor (host) de la base de datos
-  dialect: dbConfig.dialect,      // El tipo de base de datos, en este caso 'postgres'
-
-  // Configuraciones específicas del dialecto (PostgreSQL), incluyendo la conexión segura SSL
+  host: dbConfig.HOST,
+  dialect: dbConfig.dialect,
   dialectOptions: {
     ssl: {
-      require: true,              // Indica que la conexión debe usar SSL obligatoriamente
-      rejectUnauthorized: false   // Acepta certificados autofirmados o no verificados (útil en entornos no productivos)
+      require: true,
+      rejectUnauthorized: false
     }
   },
-
-  // Configuración del pool de conexiones para optimizar el rendimiento
   pool: {
-    max: dbConfig.pool.max,       // Máximo de conexiones simultáneas
-    min: dbConfig.pool.min,       // Mínimo de conexiones
-    acquire: dbConfig.pool.acquire, // Tiempo máximo para obtener una conexión antes de lanzar error
-    idle: dbConfig.pool.idle      // Tiempo que una conexión puede estar inactiva antes de ser liberada
-  }
+    max: dbConfig.pool.max,
+    min: dbConfig.pool.min,
+    acquire: dbConfig.pool.acquire,
+    idle: dbConfig.pool.idle,
+    ssl:{
+      rejectUnauthorized: false
+
+    }
+  }
 });
 
-// Creamos un objeto `db` que exportaremos para acceder a Sequelize y los modelos desde otras partes del proyecto
+// creamos un objeto db
 const db = {};
-
-// Asignamos la clase Sequelize al objeto `db`, útil si se requiere usar métodos del ORM manualmente
+// la variable db.Sequelize = modulo importado Sequelize que esta declarado previamente donde se importa el modulo
 db.Sequelize = Sequelize;
-
-// Asignamos la instancia de conexión Sequelize con los parámetros definidos
+// se define una variable con la configuracion de sequelize
 db.sequelize = sequelize;
+// se crea una variable clientes que importa el modelo que esta dentro de la carpeta models/cliente.model.js
 
-// Importamos el modelo de cliente desde la carpeta 'models' y lo registramos en el objeto `db`
-// Le pasamos la instancia de conexión `sequelize` y la clase `Sequelize` como argumentos
-db.libro = require("./libro.model.js")(sequelize, Sequelize);
+db.libro =  require("./libro.model.js")(sequelize,Sequelize);
+db.estudiante =  require("./estudiante.model.js")(sequelize,Sequelize);
+// puede seguir agregando mas modelos e importarlos de la seguiente manera
+//db.tutorials = require("./tutorial.model.js")(sequelize, Sequelize);
+// se utiliza el export para que el objeto db pueda ser accedio a travez de otras clases. 
 
-// Aquí puedes seguir importando otros modelos de forma similar
-// Ejemplo: db.productos = require("./producto.model.js")(sequelize, Sequelize);
-
-// Exportamos el objeto `db` para que pueda ser usado por otros módulos (por ejemplo, en el `server.js`)
 module.exports = db;

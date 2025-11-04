@@ -1,5 +1,5 @@
 const db = require("../models");
-const Estudiante = db.Estudiante;  // ← Evita conflictos de nombre
+const Estudiante = db.estudiante;  // ← Evita conflictos de nombre
 const Op = db.Sequelize.Op;
 
 // Crear un nuevo libro
@@ -45,7 +45,7 @@ exports.findOne = (req, res) => {
             else res.status(404).send({ message: "estudiante no encontrado." });
         })
         .catch(err => {
-            res.status(500).send({ message: "Error al recuperar el estudiante con ID=" + id_estudiante });
+            res.status(500).send({ message: "Error al recuperar el estudiante con ID=" + id_estudiante});
         });
 };
 
